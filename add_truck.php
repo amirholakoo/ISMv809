@@ -38,31 +38,30 @@ if (isset($_POST['add_truck']) && !$licenseExists) {
 // HTML Form for Checking License Number
 // HTML and CSS
 echo "<style>
-    body { font-size: 18px; } /* Increase base font size */
+    body { font-size: 18px; }
     input, select {
         width: 100%;
-        padding: 12px; /* Increase padding for better touch interaction */
+        padding: 12px;
         margin: 6px 0;
-        font-size: 1.2em; /* Increase font size of input fields */
+        font-size: 1.2em;
     }
     @media (max-width: 600px) {
-        input, select { font-size: 1.8em; } /* Larger font size for small screens */
+        input, select { font-size: 1.8em; }
     }
 </style>";
 
 echo "<form method='post'>";
 echo "<h2>Check Truck License Number</h2>";
-echo "2 Digits: <input type='number' name='digit1' required minlength='2' maxlength='2' title='Enter exactly 2 digits'> <br>";
+echo "2 Digits: <input type='text' name='digit1' required pattern='\\d{2}' title='Enter exactly 2 digits'> <br>";
 echo "Farsi Letter: <select name='farsi_letter'>";
-foreach ($farsiLetters as the letter) {
+foreach ($farsiLetters as $letter) {
     echo "<option value='$letter'>$letter</option>";
 }
 echo "</select> <br>";
-echo "3 Digits: <input type='number' name='digit2' required minlength='3' maxlength='3' title='Enter exactly 3 digits'> <br>";
-echo "IR <input type='number' name='digit3' required minlength='2' maxlength='2' title='Enter exactly 2 digits'> <br>";
+echo "3 Digits: <input type='text' name='digit2' required pattern='\\d{3}' title='Enter exactly 3 digits'> <br>";
+echo "IR <input type='text' name='digit3' required pattern='\\d{2}' title='Enter exactly 2 digits'> <br>";
 echo "<input type='submit' name='check_license' value='Check'>";
 echo "</form>";
-
 
 // HTML Form for Adding Truck
 if (!$licenseExists) {
