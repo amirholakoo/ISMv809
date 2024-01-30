@@ -51,7 +51,7 @@ $entranceTrucksQuery = "SELECT LicenseNumber FROM Shipments WHERE Location = 'En
 $entranceTrucksResult = $conn->query($entranceTrucksQuery);
 
 // Fetch Trucks at Loading/Unloading or Loaded/Unloaded
-$loadingTrucksQuery = "SELECT LicenseNumber FROM Shipments WHERE Location IN ('LoadingUnloading', 'LoadedUnloaded')";
+$loadingTrucksQuery = "SELECT LicenseNumber FROM Shipments WHERE Location = 'LoadedUnloaded'";
 $loadingTrucksResult = $conn->query($loadingTrucksQuery);
 
 // HTML Form for Weight1 Update
@@ -59,7 +59,7 @@ echo "<div class='container'>";
 echo "<form method='post' onsubmit='return confirmWeightUpdate1();'>";
 echo "<h2>Update Weight1</h2>";
 echo "Truck (License Number): <select name='license_number_weight1'>";
-// ... [Code for fetching trucks at Entrance]
+
 while ($row = $entranceTrucksResult->fetch_assoc()) {
 echo "<option value='" . $row['LicenseNumber'] . "'>" . $row['LicenseNumber'] . "</option>";
 }
@@ -67,12 +67,13 @@ echo "</select> <br>";
 echo "Weight1: <input type='number' name='weight1' min='99' max='39000' required> <br>";
 echo "<input type='submit' name='update_weight1' value='Update Weight1'>";
 echo "</form>";
-echo "</div>";
+
 
 // HTML Form for Weight2 Update
-echo "<form method='post'>";
-echo "<h2>Update Weight2</h2>";
+echo "<form method='post' onsubmit='return confirmWeightUpdate2();'>";
+echo "<h2>Update Weight1</h2>";
 echo "Truck (License Number): <select name='license_number_weight2'>";
+
 while ($row = $loadingTrucksResult->fetch_assoc()) {
 echo "<option value='" . $row['LicenseNumber'] . "'>" . $row['LicenseNumber'] . "</option>";
 }
@@ -82,6 +83,7 @@ echo "<input type='submit' name='update_weight2' value='Update Weight2'>";
 echo "</form>";
 
 
+echo "</div>";
 
 
 // JavaScript for popup confirmation
