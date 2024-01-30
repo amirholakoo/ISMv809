@@ -1,4 +1,10 @@
 <?php
+
+ini_set('display_errors', 1);
+
+error_reporting(E_ALL);
+
+
 include 'connect_db.php';
 include 'phpqrcode/qrlib.php'; // Path to phpqrcode library
 
@@ -34,7 +40,7 @@ if (isset($_POST['add_roll'])) {
         echo "<img src='$qrCodePath' />";
 
         // Generate new reel number for the next submission
-        $newReelNumber += $reelNumber; // logic to calculate next reel number
+        $newReelNumber = $reelNumber + 1; // logic to calculate next reel number
 
         
     } else {
