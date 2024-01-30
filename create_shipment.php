@@ -94,12 +94,9 @@ $customerID = $_POST['customer_id'];
 
         $conn->commit();
         echo "<p style='color:green;'>" . $customerID . " Shipment created and truck " . $licenseNumber . " status updated successfully!</p>";
-         // JavaScript to reload the page after 5 seconds (5000 milliseconds)
-        echo "<script type='text/javascript'>
-                setTimeout(function() {
-                    window.location.reload();
-                }, 5000);
-              </script>";
+         
+        header("Refresh:5; url=create_shipment.php"); // reload the page after 5 seconds
+
     } catch (Exception $e) {
         $conn->rollback();
         echo "<p style='color:red;'>Error creating shipment: " . $e->getMessage() . "</p>";
@@ -183,4 +180,6 @@ echo "<script type='text/javascript'>
 </script>";
 echo "</body></html>";
 $conn->close();
+
+
 ?>
