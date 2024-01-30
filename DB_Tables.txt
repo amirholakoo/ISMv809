@@ -131,3 +131,119 @@ ALTER TABLE Sales ADD ShipmentID INT;
 ALTER TABLE Sales ADD FOREIGN KEY (ShipmentID) REFERENCES Shipments(ShipmentID);
 ALTER TABLE Purchases ADD ShipmentID INT;
 ALTER TABLE Purchases ADD FOREIGN KEY (ShipmentID) REFERENCES Shipments(ShipmentID);
+
+
+CREATE TABLE Anbar_Sangin (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+CREATE TABLE Anbar_Salon_Tolid (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+    
+);
+
+CREATE TABLE Anbar_Parvandeh (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+CREATE TABLE Anbar_Koochak (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+CREATE TABLE Anbar_Khamir_Ghadim (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+CREATE TABLE Anbar_Khamir_Kordan (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+CREATE TABLE Anbar_Muhvateh_Kardan (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+CREATE TABLE Anbar_Akhal (
+        ID INT AUTO_INCREMENT PRIMARY KEY,
+    ReceiveDate DATETIME,
+    ReelNumber VARCHAR(255),
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status ENUM('In-stock', 'Moved', 'Used'),
+    Location VARCHAR(255),
+    LastDate DATETIME
+);
+
+
