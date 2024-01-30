@@ -6,62 +6,60 @@ include 'connect_db.php';
 // Include the CSS file
 echo "<link rel='stylesheet' href='style.css'>";
 
-// Fetch Incoming Trucks
-$incomingTrucksQuery = "SELECT LicenseNumber FROM Shipments WHERE Status = 'Incoming' AND Location = 'LoadingUnloading'";
-$incomingTrucksResult = $conn->query($incomingTrucksQuery);
+// Fetch Incoming Shipments for Dropdown
+$shipmentsQuery = "SELECT LicenseNumber FROM Shipments WHERE Status = 'Incoming' AND Location = 'LoadingUnloading'";
+$shipmentsResult = $conn->query($shipmentsQuery);
 
-// Unloading Forklift Operation
-if (isset($_POST['unloading_forklift'])) {
+// List of Anbars for Dropdown
+$anbars = [
+    'Anbar_Sangin', 'Anbar_Salon_Tolid', 'Anbar_Parvandeh', 
+    'Anbar_Koochak', 'Anbar_Khamir_Ghadim', 'Anbar_Khamir_Kordan', 
+    'Anbar_Muhvateh_Kardan', 'Anbar_Akhal'
+];
+
+// Handle Unloading Shipment
+if (isset($_POST['unload_shipment'])) {
     $licenseNumber = $_POST['license_number'];
-    $unloadingZone = $_POST['unloading_zone'];
-    $quantity = $_POST['quantity'];
-    $receiveDate = date("Y-m-d H:i:s");
+    $unloadingLocation = $_POST['unloading_location'];
+    $quantity = intval($_POST['quantity']);
 
-    // Select the appropriate Anbar table based on unloading zone
-    $anbarTable = "";
-    switch ($unloadingZone) {
-        case "Anbar_Sangin":
-            $anbarTable = "Anbar_Sangin";
-            break;
-        // ... other cases for different Anbars
-    }
+    // Update Shipments Table
+    $updateShipments = $conn->prepare("UPDATE Shipments SET Location = 'LoadedUnloaded', UnloadLocation = ?, Quantity = ? WHERE LicenseNumber = ?");
+    $updateShipments->bind_param("sis", $unloadingLocation, $quantity, $licenseNumber);
+    $updateShipments->execute();
+    $updateShipments->close();
 
-    // Insert into selected Anbar table
-    if ($anbarTable) {
-        $insertAnbarQuery = "INSERT INTO $anbarTable (ReceiveDate, LicenseNumber, Quantity, Status, Location) VALUES (?, ?, ?, 'In-stock', ?)";
-        $insertAnbar = $conn->prepare($insertAnbarQuery);
-        $insertAnbar->bind_param("sisi", $receiveDate, $licenseNumber, $quantity, $unloadingZone);
-
-        if ($insertAnbar->execute()) {
-            echo "<p style='color:green;'>Record successfully added to $anbarTable for $licenseNumber.</p>";
-        } else {
-            echo "<p style='color:red;'>Error adding record: " . $insertAnbar->error . "</p>";
-        }
+    // Insert into Anbar Table
+    for ($i = 0; $i < $quantity; $i++) {
+        $insertAnbar = $conn->prepare("INSERT INTO $unloadingLocation (ReceiveDate, ReelNumber, SupplierID, SupplierName, MaterialType, MaterialName, Description, Status, Location) SELECT NOW(), ReelNumber, SupplierID, SupplierName, MaterialType, MaterialName, Description, 'In-stock', '$unloadingLocation' FROM Shipments WHERE LicenseNumber = ?");
+        $insertAnbar->bind_param("s", $licenseNumber);
+        $insertAnbar->execute();
         $insertAnbar->close();
-    } else {
-        echo "<p style='color:red;'>Invalid unloading zone selected.</p>";
     }
+
+    echo "<p style='color:green;'>Successfully unloaded $quantity items to $unloadingLocation for shipment $licenseNumber.</p>";
 }
 
-// HTML Form for Unloading Forklift Operation
+// HTML Form for Unloading Shipment
 echo "<div class='container'>";
 echo "<form method='post'>";
-echo "<h2>Unloading Forklift Operation</h2>";
-echo "Truck (License Number): <select name='license_number'>";
-while ($row = $incomingTrucksResult->fetch_assoc()) {
+echo "<h2>Unload Shipment</h2>";
+
+echo "Shipment (License Number): <select name='license_number'>";
+foreach ($shipmentsResult as $row) {
     echo "<option value='" . $row['LicenseNumber'] . "'>" . $row['LicenseNumber'] . "</option>";
 }
 echo "</select> <br>";
 
-// Dropdown for Unloading Zone
-echo "Unloading Zone: <select name='unloading_zone'>";
-// List of Anbar tables as options
-echo "<option value='Anbar_Sangin'>Anbar_Sangin</option>";
-// ... other Anbar options
+echo "Unloading Location: <select name='unloading_location'>";
+foreach ($anbars as $anbar) {
+    echo "<option value='$anbar'>$anbar</option>";
+}
 echo "</select> <br>";
 
-echo "Quantity: <input type='number' name='quantity' required> <br>";
-echo "<input type='submit' name='unloading_forklift' value='Unload'>";
+echo "Quantity: <input type='number' name='quantity' min='1' required> <br>";
+
+echo "<input type='submit' name='unload_shipment' value='Unload Shipment'>";
 echo "</form>";
 echo "</div>";
 
