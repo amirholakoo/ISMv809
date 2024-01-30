@@ -27,6 +27,9 @@ if (isset($_POST['create_shipment'])) {
     $materialType = $_POST['material_type'];
     $materialName = $_POST['material_name'];
     $shipmentType = $_POST['shipment_type'];
+$customerID = $_POST['customer_id'];
+
+
     $location = 'Entrance';
     $entryTime = date("Y-m-d H:i:s");
 
@@ -60,13 +63,25 @@ if (isset($_POST['create_shipment'])) {
     $materialID = $materialRow['MaterialID'];
     $materialStmt->close();
 
+// Fetch Supplier Name from Suppliers
+    $customerQuery = "SELECT CustomerName FROM Customers WHERE CustomerID = ?";
+    $customerStmt = $conn->prepare($customerQuery);
+    $customerStmt->bind_param("i", $customerID);
+    $customerStmt->execute();
+    $customerResult = $customerStmt->get_result();
+    $customerRow = $customerResult->fetch_assoc();
+    $customerName = $customerRow['CustomerName'];
+    $customerStmt->close();
+
+
+
     // Transaction to ensure atomicity
     $conn->begin_transaction();
     try {
         // Insert into Shipments
-        $insertShipmentQuery = "INSERT INTO Shipments (Status, Location, TruckID, LicenseNumber, SupplierName, SupplierID, MaterialType, MaterialName, MaterialID, EntryTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $insertShipmentQuery = "INSERT INTO Shipments (Status, Location, TruckID, LicenseNumber, CustomerName, SupplierName, SupplierID, MaterialType, MaterialName, MaterialID, EntryTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $insertShipment = $conn->prepare($insertShipmentQuery);
-        $insertShipment->bind_param("ssississis", $shipmentType, $location, $truckID, $licenseNumber, $supplierName, $supplierID, $materialType, $materialName, $materialID, $entryTime);
+        $insertShipment->bind_param("ssisssissis", $shipmentType, $location, $truckID, $licenseNumber, $customerName, $supplierName, $supplierID, $materialType, $materialName, $materialID, $entryTime);
         $insertShipment->execute();
         $insertShipment->close();
 
