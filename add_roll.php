@@ -2,6 +2,9 @@
 include 'connect_db.php';
 include 'phpqrcode/qrlib.php'; // Path to phpqrcode library
 
+// Include the CSS file
+echo "<link rel='stylesheet' href='style.css'>";
+
 // Add Roll to Products Table
 if (isset($_POST['add_roll'])) {
     $reelNumber = $conn->real_escape_string($_POST['reel_number']);
@@ -29,6 +32,11 @@ if (isset($_POST['add_roll'])) {
         // Display QR Code
         echo "<p>QR Code for Reel Number $reelNumber:</p>";
         echo "<img src='$qrCodePath' />";
+
+        // Generate new reel number for the next submission
+        $newReelNumber += $reelNumber; // logic to calculate next reel number
+
+        
     } else {
         echo "<p style='color:red;'>Error adding roll: " . $stmt->error . "</p>";
     }
@@ -36,19 +44,32 @@ if (isset($_POST['add_roll'])) {
 }
 
 // HTML Form for Adding Roll
+echo "<div class='container'>";
 echo "<form method='post'>";
 echo "<h2>Add New Roll</h2>";
-echo "Reel Number: <input type='text' name='reel_number' required> <br>";
-echo "Width: <input type='number' name='width' required> <br>";
-echo "GSM: <input type='number' name='gsm' required> <br>";
-echo "Length: <input type='number' name='length' required> <br>";
-echo "Grade: <input type='text' name='grade'> <br>";
-echo "Breaks: <input type='text' name='breaks'> <br>";
-echo "Comments: <textarea name='comments'></textarea> <br>";
+echo "<div class='form-group'><label>Reel Number:</label> <input type='text' name='reel_number' value='$newReelNumber' required></div>";
+
+// Width Dropdown
+echo "<div class='form-group'><label>Width:</label> <select name='width'>";
+$widthOptions = [200, 210, 220, 230, 240, 250, 'NEW'];
+foreach ($widthOptions as $option) {
+    echo "<option value='$option'>$option</option>";
+}
+echo "</select></div>";
+
+// Default values for GSM, Length, Grade, Breaks
+echo "<div class='form-group'><label>GSM:</label> <input type='number' name='gsm' value='130'></div>";
+echo "<div class='form-group'><label>Length:</label> <input type='number' name='length' value='7001'></div>";
+echo "<div class='form-group'><label>Grade:</label> <input type='text' name='grade' value='A'></div>";
+echo "<div class='form-group'><label>Breaks:</label> <input type='text' name='breaks' value='0'></div>";
+echo "<div class='form-group'><label>Comments:</label> <textarea name='comments'></textarea></div>";
+
 echo "<input type='submit' name='add_roll' value='Add Roll'>";
 echo "</form>";
+echo "</div>";
 
 echo "</body></html>";
+
 
 $conn->close();
 ?>
