@@ -1,4 +1,11 @@
 <?php
+
+ini_set('display_errors', 1); 
+error_reporting(E_ALL);
+
+// Include the CSS file
+echo "<link rel='stylesheet' href='style.css'>";
+
 include 'connect_db.php';
 
 // Fetch Free Trucks for Dropdown
@@ -8,6 +15,10 @@ $trucksResult = $conn->query($trucksQuery);
 // Fetch Suppliers for Dropdown
 $suppliersQuery = "SELECT SupplierID, SupplierName FROM Suppliers";
 $suppliersResult = $conn->query($suppliersQuery);
+
+// Fetch Customers for Dropdown
+$customersQuery = "SELECT CustomerID, CustomerName FROM Customers";
+$customersResult = $conn->query($customersQuery);
 
 // Create Shipment
 if (isset($_POST['create_shipment'])) {
@@ -75,6 +86,7 @@ if (isset($_POST['create_shipment'])) {
 }
 
 // HTML Form for Creating Shipment
+echo "<div class='container'>";
 echo "<form method='post'>";
 echo "<h2>Create Shipment</h2>";
 
@@ -104,8 +116,18 @@ echo "Shipment Type: <select name='shipment_type'>
     <option value='Outgoing'>Outgoing</option>
 </select> <br>";
 
+// Customer Dropdown
+echo "Customer: <select name='customer_id' id='customer_id'>";
+echo "<option value=''>Select Customer</option>";
+foreach ($customersResult as $row) {
+    echo "<option value='" . $row['CustomerID'] . "'>" . $row['CustomerName'] . "</option>";
+}
+echo "</select> <br><br><br><br>";
+
+
 echo "<input type='submit' name='create_shipment' value='Create Shipment'>";
 echo "</form>";
+echo "</div>";
 
 // Include jQuery for AJAX
 echo "<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>";
