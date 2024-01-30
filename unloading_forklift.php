@@ -17,9 +17,13 @@ $anbars = [
     'Anbar_Muhvateh_Kardan', 'Anbar_Akhal'
 ];
 
-// Handle Unloading Shipment
+
+
 if (isset($_POST['unload_shipment'])) {
-    $shipmentID = $_POST['shipment_id'];
+    if (isset($_POST['shipment_id'])) {
+        $shipmentID = $_POST['shipment_id'];
+        // Handle Unloading Shipment
+
     $licenseNumber = $_POST['license_number'];
     $unloadingLocation = $_POST['unloading_location'];
     $quantity = intval($_POST['quantity']);
@@ -49,6 +53,11 @@ if (isset($_POST['unload_shipment'])) {
 
     echo "<p style='color:green;'>Successfully unloaded $quantity items to $unloadingLocation for shipment $licenseNumber.</p>";
 }
+    } else {
+        echo "<p style='color:red;'>Shipment ID is missing.</p>";
+    }
+
+
 
 // HTML Form for Unloading Shipment
 echo "<div class='container'>";
