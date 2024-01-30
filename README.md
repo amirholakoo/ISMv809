@@ -1,5 +1,9 @@
 # ISMv809
 
+cp -r /var/www/html/ISMv4/phpqrcode/ /var/www/html/ISMv808/
+
+sudo mkdir qrcodes
+
 sudo chown -R admin:www-data /var/www/html
 
 sudo chmod -R 775 qrcodes
