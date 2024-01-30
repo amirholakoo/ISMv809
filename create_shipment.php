@@ -93,9 +93,9 @@ $customerID = $_POST['customer_id'];
         $updateTruck->close();
 
         $conn->commit();
-        echo "<p style='color:green;'>" . $customerID . " Shipment created and truck " . $licenseNumber . " status updated successfully!</p>";
-         
-        header("Refresh:5; url=create_shipment.php"); // reload the page after 5 seconds
+        echo "<p style='color:green;'> Shipment was created for " . $customerID . " - " . $customerName . " FOR " . $materialName . " . Shipments and truck: " . $licenseNumber . " status updated successfully!</p>";
+         // JavaScript to reload the page after 10
+        header("Refresh:10; url=create_shipment.php");
 
     } catch (Exception $e) {
         $conn->rollback();
