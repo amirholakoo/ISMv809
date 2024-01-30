@@ -7,7 +7,7 @@ include 'connect_db.php';
 echo "<link rel='stylesheet' href='style.css'>";
 
 // Fetch Incoming Shipments for Dropdown
-$shipmentsQuery = "SELECT LicenseNumber FROM Shipments WHERE Status = 'Incoming' AND Location = 'LoadingUnloading'";
+$shipmentsQuery = "SELECT ShipmentID, LicenseNumber FROM Shipments WHERE Status = 'Incoming' AND Location = 'LoadingUnloading'";
 $shipmentsResult = $conn->query($shipmentsQuery);
 
 // List of Anbars for Dropdown
@@ -19,14 +19,15 @@ $anbars = [
 
 // Handle Unloading Shipment
 if (isset($_POST['unload_shipment'])) {
+    $shipmentID = $_POST['shipment_id'];
     $licenseNumber = $_POST['license_number'];
     $unloadingLocation = $_POST['unloading_location'];
     $quantity = intval($_POST['quantity']);
 
-    // Fetch shipment details
-    $shipmentDetailsQuery = "SELECT SupplierID, SupplierName, MaterialType, MaterialName FROM Shipments WHERE LicenseNumber = ?";
+    // Fetch shipment details using ShipmentID
+    $shipmentDetailsQuery = "SELECT SupplierID, SupplierName, MaterialType, MaterialName FROM Shipments WHERE ShipmentID = ?";
     $shipmentDetailsStmt = $conn->prepare($shipmentDetailsQuery);
-    $shipmentDetailsStmt->bind_param("s", $licenseNumber);
+    $shipmentDetailsStmt->bind_param("i", $shipmentID);
     $shipmentDetailsStmt->execute();
     $result = $shipmentDetailsStmt->get_result();
     $shipmentDetails = $result->fetch_assoc();
@@ -54,9 +55,9 @@ echo "<div class='container'>";
 echo "<form method='post'>";
 echo "<h2>Unload Shipment</h2>";
 
-echo "Shipment (License Number): <select name='license_number'>";
+echo "Shipment (Shipment ID - License Number): <select name='shipment_id'>";
 foreach ($shipmentsResult as $row) {
-    echo "<option value='" . $row['LicenseNumber'] . "'>" . $row['LicenseNumber'] . "</option>";
+    echo "<option value='" . $row['ShipmentID'] . "'>" . $row['ShipmentID'] . " - " . $row['LicenseNumber'] . "</option>";
 }
 echo "</select> <br>";
 
