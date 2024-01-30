@@ -5,6 +5,9 @@ error_reporting(E_ALL);
 
 include 'connect_db.php';
 
+// Include the CSS file
+echo "<link rel='stylesheet' href='style.css'>";
+
 // Update Weight1
 if (isset($_POST['update_weight1'])) {
     $licenseNumber = $_POST['license_number_weight1'];
@@ -52,16 +55,19 @@ $loadingTrucksQuery = "SELECT LicenseNumber FROM Shipments WHERE Location IN ('L
 $loadingTrucksResult = $conn->query($loadingTrucksQuery);
 
 // HTML Form for Weight1 Update
-echo "<form method='post'>";
+echo "<div class='container'>";
+echo "<form method='post' onsubmit='return confirmWeightUpdate1();'>";
 echo "<h2>Update Weight1</h2>";
 echo "Truck (License Number): <select name='license_number_weight1'>";
+// ... [Code for fetching trucks at Entrance]
 while ($row = $entranceTrucksResult->fetch_assoc()) {
 echo "<option value='" . $row['LicenseNumber'] . "'>" . $row['LicenseNumber'] . "</option>";
 }
 echo "</select> <br>";
-echo "Weight1: <input type='number' name='weight1' required> <br>";
+echo "Weight1: <input type='number' name='weight1' min='99' max='39000' required> <br>";
 echo "<input type='submit' name='update_weight1' value='Update Weight1'>";
 echo "</form>";
+echo "</div>";
 
 // HTML Form for Weight2 Update
 echo "<form method='post'>";
@@ -74,6 +80,23 @@ echo "</select> <br>";
 echo "Weight2: <input type='number' name='weight2' required> <br>";
 echo "<input type='submit' name='update_weight2' value='Update Weight2'>";
 echo "</form>";
+
+
+
+
+// JavaScript for popup confirmation
+echo "<script>
+function confirmWeightUpdate1() {
+    var weight1 = document.querySelector('[name=\"weight1\"]').value;
+    return confirm('Please confirm: Update Weight1 to ' + weight1 + ' KG?');
+}
+
+function confirmWeightUpdate2() {
+    var weight2 = document.querySelector('[name=\"weight2\"]').value;
+    return confirm('Please confirm: Update Weight2 to ' + weight2 + ' KG?');
+}
+</script>";
+
 
 echo "</body></html>";
 
