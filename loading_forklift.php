@@ -17,10 +17,13 @@ $loadingLocations = array_merge(['Products'], [
     'Anbar_Muhvateh_Kardan', 'Anbar_Akhal'
 ]);
 
-$shipmentID = $_POST['shipment_id'];
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['load_truck'])) {
+    $shipmentID = $_POST['shipment_id'];
     $loadingLocation = $_POST['loading_location'];
     $selectedWidth = $_POST['width'];
-    $selectedReels = $_POST['reel_numbers'];
+    $selectedReels = $_POST['reel_numbers']; // Assuming this is an array
+
 
     // Update Shipments Table
     $listOfReels = implode(',', $selectedReels);
