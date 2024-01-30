@@ -38,8 +38,8 @@ if (isset($_POST['unload_shipment'])) {
     $shipmentDetailsStmt->close();
 
     // Update Shipments Table
-    $updateShipments = $conn->prepare("UPDATE Shipments SET Location = 'LoadedUnloaded', UnloadLocation = ?, Quantity = ? WHERE LicenseNumber = ?");
-    $updateShipments->bind_param("sis", $unloadingLocation, $quantity, $licenseNumber);
+    $updateShipments = $conn->prepare("UPDATE Shipments SET Location = 'LoadedUnloaded', UnloadLocation = ?, Quantity = ? WHERE ShipmentID = ?");
+    $updateShipments->bind_param("sis", $unloadingLocation, $quantity, $shipmentID);
     $updateShipments->execute();
     $updateShipments->close();
 
