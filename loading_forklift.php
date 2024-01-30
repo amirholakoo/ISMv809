@@ -20,6 +20,16 @@ $loadingLocations = array_merge(['Products'], [
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['load_truck'])) {
     $shipmentID = $_POST['shipment_id'];
+    
+    // Fetch the License Number for the selected ShipmentID
+    $licenseQuery = $conn->prepare("SELECT LicenseNumber FROM Shipments WHERE ShipmentID = ?");
+    $licenseQuery->bind_param("i", $shipmentID);
+    $licenseQuery->execute();
+    $licenseResult = $licenseQuery->get_result();
+    $licenseRow = $licenseResult->fetch_assoc();
+    $licenseNumber = $licenseRow['LicenseNumber'];
+    $licenseQuery->close();
+    
     $loadingLocation = $_POST['loading_location'];
     $selectedWidth = $_POST['width'];
     $selectedReels = $_POST['reel_numbers']; // Assuming this is an array
@@ -36,18 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['load_truck'])) {
     if ($loadingLocation == 'Products') {
         foreach ($selectedReels as $reelNumber) {
             $updateProduct = $conn->prepare("UPDATE Products SET Status = 'Sold', Location = ? WHERE ReelNumber = ?");
-            $updateProduct->bind_param("ss", $shipmentID, $reelNumber);
+            $updateProduct->bind_param("ss", $licenseNumber, $reelNumber); // Use License Number
             $updateProduct->execute();
             $updateProduct->close();
         }
     } else {
         foreach ($selectedReels as $reelNumber) {
             $updateAnbar = $conn->prepare("UPDATE $loadingLocation SET Status = 'Sold', Location = ? WHERE ReelNumber = ? AND Width = ?");
-            $updateAnbar->bind_param("ssi", $shipmentID, $reelNumber, $selectedWidth);
+            $updateAnbar->bind_param("ssi", $licenseNumber, $reelNumber, $selectedWidth); // Use License Number
             $updateAnbar->execute();
             $updateAnbar->close();
         }
     }
+}
 
     echo "<p style='color:green;'>Truck loaded successfully for shipment ID $shipmentID.</p>";
 }
