@@ -17,10 +17,38 @@ $loadingLocations = array_merge(['Products'], [
     'Anbar_Muhvateh_Kardan', 'Anbar_Akhal'
 ]);
 
-// Handle Load Truck
-if (isset($_POST['load_truck'])) {
-    // ... Code to handle truck loading, update Shipments, Products, and Anbar tables
+$shipmentID = $_POST['shipment_id'];
+    $loadingLocation = $_POST['loading_location'];
+    $selectedWidth = $_POST['width'];
+    $selectedReels = $_POST['reel_numbers'];
+
+    // Update Shipments Table
+    $listOfReels = implode(',', $selectedReels);
+    $updateShipments = $conn->prepare("UPDATE Shipments SET ListOfReels = ?, Location = 'LoadedUnloaded' WHERE ShipmentID = ?");
+    $updateShipments->bind_param("si", $listOfReels, $shipmentID);
+    $updateShipments->execute();
+    $updateShipments->close();
+
+    // Update Products or Anbar Table
+    if ($loadingLocation == 'Products') {
+        foreach ($selectedReels as $reelNumber) {
+            $updateProduct = $conn->prepare("UPDATE Products SET Status = 'Sold', Location = ? WHERE ReelNumber = ?");
+            $updateProduct->bind_param("ss", $shipmentID, $reelNumber);
+            $updateProduct->execute();
+            $updateProduct->close();
+        }
+    } else {
+        foreach ($selectedReels as $reelNumber) {
+            $updateAnbar = $conn->prepare("UPDATE $loadingLocation SET Status = 'Sold', Location = ? WHERE ReelNumber = ? AND Width = ?");
+            $updateAnbar->bind_param("ssi", $shipmentID, $reelNumber, $selectedWidth);
+            $updateAnbar->execute();
+            $updateAnbar->close();
+        }
+    }
+
+    echo "<p style='color:green;'>Truck loaded successfully for shipment ID $shipmentID.</p>";
 }
+
 
 // HTML Form for Loading Shipment
 echo "<div class='container'>";
@@ -54,8 +82,32 @@ echo "</div>";
 // JavaScript for dynamic dropdowns
 echo "<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>";
 echo "<script>
-    // JavaScript to dynamically load widths and reel numbers based on selected location
-    // Add AJAX code here
+$(document).ready(function() {
+    $('#loading_location').change(function() {
+        var location = $(this).val();
+        $.ajax({
+            url: 'fetch_widths.php',
+            type: 'POST',
+            data: {location: location},
+            success: function(response) {
+                $('#width').html(response);
+            }
+        });
+    });
+
+    $('#width').change(function() {
+        var location = $('#loading_location').val();
+        var width = $(this).val();
+        $.ajax({
+            url: 'fetch_reel_numbers.php',
+            type: 'POST',
+            data: {location: location, width: width},
+            success: function(response) {
+                $('#reel_numbers').html(response);
+            }
+        });
+    });
+});
 </script>";
 
 echo "</body></html>";
