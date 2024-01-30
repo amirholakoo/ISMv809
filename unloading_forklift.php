@@ -23,6 +23,15 @@ if (isset($_POST['unload_shipment'])) {
     $unloadingLocation = $_POST['unloading_location'];
     $quantity = intval($_POST['quantity']);
 
+    // Fetch shipment details
+    $shipmentDetailsQuery = "SELECT SupplierID, SupplierName, MaterialType, MaterialName FROM Shipments WHERE LicenseNumber = ?";
+    $shipmentDetailsStmt = $conn->prepare($shipmentDetailsQuery);
+    $shipmentDetailsStmt->bind_param("s", $licenseNumber);
+    $shipmentDetailsStmt->execute();
+    $result = $shipmentDetailsStmt->get_result();
+    $shipmentDetails = $result->fetch_assoc();
+    $shipmentDetailsStmt->close();
+
     // Update Shipments Table
     $updateShipments = $conn->prepare("UPDATE Shipments SET Location = 'LoadedUnloaded', UnloadLocation = ?, Quantity = ? WHERE LicenseNumber = ?");
     $updateShipments->bind_param("sis", $unloadingLocation, $quantity, $licenseNumber);
@@ -31,8 +40,8 @@ if (isset($_POST['unload_shipment'])) {
 
     // Insert into Anbar Table
     for ($i = 0; $i < $quantity; $i++) {
-        $insertAnbar = $conn->prepare("INSERT INTO $unloadingLocation (ReceiveDate, ReelNumber, SupplierID, SupplierName, MaterialType, MaterialName, Description, Status, Location) SELECT NOW(), ReelNumber, SupplierID, SupplierName, MaterialType, MaterialName, Description, 'In-stock', '$unloadingLocation' FROM Shipments WHERE LicenseNumber = ?");
-        $insertAnbar->bind_param("s", $licenseNumber);
+        $insertAnbar = $conn->prepare("INSERT INTO $unloadingLocation (ReceiveDate, SupplierID, SupplierName, MaterialType, MaterialName, Description, Status, Location) VALUES (NOW(), ?, ?, ?, ?, '', 'In-stock', '$unloadingLocation')");
+        $insertAnbar->bind_param("isss", $shipmentDetails['SupplierID'], $shipmentDetails['SupplierName'], $shipmentDetails['MaterialType'], $shipmentDetails['MaterialName']);
         $insertAnbar->execute();
         $insertAnbar->close();
     }
