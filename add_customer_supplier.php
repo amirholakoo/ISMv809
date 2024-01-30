@@ -1,7 +1,35 @@
 <?php
 include 'connect_db.php';
 
-// ... [PHP code for handling form submissions]
+// Add Supplier
+if (isset($_POST['add_supplier'])) {
+    $supplierName = $conn->real_escape_string($_POST['supplier_name']);
+    $address = $conn->real_escape_string($_POST['supplier_address']);
+    $phone = $conn->real_escape_string($_POST['supplier_phone']);
+
+    $insertSupplier = "INSERT INTO Suppliers (SupplierName, Address, Phone) VALUES ('$supplierName', '$address', '$phone')";
+    
+    if ($conn->query($insertSupplier) === TRUE) {
+        echo "<p style='color:green;'>New supplier added successfully!</p>";
+    } else {
+        echo "<p style='color:red;'>Error adding supplier: " . $conn->error . "</p>";
+    }
+}
+
+// Add Customer
+if (isset($_POST['add_customer'])) {
+    $customerName = $conn->real_escape_string($_POST['customer_name']);
+    $address = $conn->real_escape_string($_POST['customer_address']);
+    $phone = $conn->real_escape_string($_POST['customer_phone']);
+
+    $insertCustomer = "INSERT INTO Customers (CustomerName, Address, Phone) VALUES ('$customerName', '$address', '$phone')";
+    
+    if ($conn->query($insertCustomer) === TRUE) {
+        echo "<p style='color:green;'>New customer added successfully!</p>";
+    } else {
+        echo "<p style='color:red;'>Error adding customer: " . $conn->error . "</p>";
+    }
+}
 
 // CSS for styling
 echo "<style>
