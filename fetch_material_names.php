@@ -1,16 +1,18 @@
-<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
-<script>
-$(document).ready(function() {
-    $('#anbar').change(function() {
-        var anbar = $(this).val();
-        $.ajax({
-            url: 'fetch_material_names.php',
-            type: 'POST',
-            data: {anbar: anbar},
-            success: function(response) {
-                $('#material_name').html(response);
-            }
-        });
-    });
-});
-</script>
+<?php
+include 'connect_db.php';
+
+if (isset($_POST['anbar'])) {
+    $anbar = $_POST['anbar'];
+
+    $query = "SELECT DISTINCT MaterialName FROM $anbar WHERE Status = 'In-stock'";
+    $result = $conn->query($query);
+    if (!$result) {
+        echo "Error: " . $conn->error;  // Display error if query fails
+    } else {
+        echo "<option value=''>Select Material Name</option>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<option value='" . $row['MaterialName'] . "'>" . $row['MaterialName'] . "</option>";
+        }
+    }
+}
+?>
