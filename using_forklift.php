@@ -66,9 +66,21 @@ echo "</div>";
 
 // JavaScript for dynamic dropdowns
 echo "<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>";
-echo "<script>
-    // JavaScript to dynamically load material names based on selected Anbar
-    // Add AJAX code here
+echo "
+<script>
+$(document).ready(function() {
+    $('#anbar').change(function() {
+        var anbar = $(this).val();
+        $.ajax({
+            url: 'fetch_material_names.php',
+            type: 'POST',
+            data: {anbar: anbar},
+            success: function(response) {
+                $('#material_name').html(response);
+            }
+        });
+    });
+});
 </script>";
 
 echo "</body></html>";
