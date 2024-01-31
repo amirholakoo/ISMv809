@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_material'])) {
     $conn->begin_transaction();
 
     try {
-        // Fetch IDs of materials to be used
+        // Fetch IDs and details of materials to be used
         $fetchIDsQuery = "SELECT ID, SupplierID, SupplierName, MaterialType FROM $selectedAnbar WHERE MaterialName = ? AND Status = 'In-stock' LIMIT ?";
         $fetchIDsStmt = $conn->prepare($fetchIDsQuery);
         $fetchIDsStmt->bind_param("si", $materialName, $quantity);
@@ -39,9 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_material'])) {
             $updateAnbarQuery->execute();
 
             // Insert into Consumption Table
-            // Insert into Consumption Table
             $insertConsumptionQuery = $conn->prepare("INSERT INTO Consumption (Date, SupplierID, SupplierName, MaterialType, MaterialName, Description, Status) VALUES (NOW(), ?, ?, ?, ?, '', 'Used')");
-            $insertConsumptionQuery->bind_param("iiss", $detailsRow['SupplierID'], $detailsRow['SupplierName'], $detailsRow['MaterialType'], $materialName);
+            $insertConsumptionQuery->bind_param("iiss", $idRow['SupplierID'], $idRow['SupplierName'], $idRow['MaterialType'], $materialName);
             $insertConsumptionQuery->execute();
         }
 
