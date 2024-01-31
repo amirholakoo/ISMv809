@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_material'])) {
 
     try {
         // Fetch IDs of materials to be used
-        $fetchIDsQuery = "SELECT ID FROM $selectedAnbar WHERE MaterialName = ? AND Status = 'In-stock' LIMIT ?";
+        $fetchIDsQuery = "SELECT ID, SupplierID, SupplierName, MaterialType FROM $selectedAnbar WHERE MaterialName = ? AND Status = 'In-stock' LIMIT ?";
         $fetchIDsStmt = $conn->prepare($fetchIDsQuery);
         $fetchIDsStmt->bind_param("si", $materialName, $quantity);
         $fetchIDsStmt->execute();
