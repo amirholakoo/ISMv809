@@ -259,4 +259,12 @@ CREATE TABLE Consumption (
 );
 
 
+ALTER TABLE Anbar_Sangin ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Salon_Tolid ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Parvandeh ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Koochak ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Khamir_Ghadim ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Khamir_Kordan ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Muhvateh_Kardan ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
+ALTER TABLE Anbar_Akhal ADD (Width INT, GSM INT, Length INT, Grade VARCHAR(255), Breaks VARCHAR(255), Comments TEXT, qrCode TEXT);
 
