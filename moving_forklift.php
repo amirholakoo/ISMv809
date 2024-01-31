@@ -85,8 +85,42 @@ echo "</div>";
 // JavaScript for dynamic dropdowns and data fetching
 echo "<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>";
 echo "<script>
-// Add AJAX and JavaScript code here for dynamic dropdowns
-</script>";
+$(document).ready(function() {
+    $('#what, #from').change(function() {
+        var what = $('#what').val();
+        var from = $('#from').val();
+        if (what && from) {
+            // Fetch Types
+            $.ajax({
+                url: 'fetch_types.php',
+                type: 'POST',
+                data: { what: what, from: from },
+                success: function(response) {
+                    $('#select_type').html(response);
+                }
+            });
+        }
+    });
+
+    $('#select_type').change(function() {
+        var what = $('#what').val();
+        var from = $('#from').val();
+        var type = $(this).val();
+        if (what && from && type) {
+            // Fetch Items
+            $.ajax({
+                url: 'fetch_items.php',
+                type: 'POST',
+                data: { what: what, from: from, type: type },
+                success: function(response) {
+                    $('#select_item').html(response);
+                }
+            });
+        }
+    });
+});
+</script>
+";
 
 echo "</body></html>";
 $conn->close();
