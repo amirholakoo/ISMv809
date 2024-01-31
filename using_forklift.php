@@ -40,10 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['use_material'])) {
 
             // Insert into Consumption Table
             // Insert into Consumption Table
-        $insertConsumptionQuery = $conn->prepare("INSERT INTO Consumption (Date, SupplierID, SupplierName, MaterialType, MaterialName, Description, Status) VALUES (NOW(), ?, ?, ?, ?, ?, 'Used')");
-        $insertConsumptionQuery->bind_param("issss", $row['SupplierID'], $row['SupplierName'], $row['MaterialType'], $materialName, $row['Description']);
-        $insertConsumptionQuery->execute();
-        $insertConsumptionQuery->close();
+            $insertConsumptionQuery = $conn->prepare("INSERT INTO Consumption (Date, SupplierID, SupplierName, MaterialType, MaterialName, Description, Status) VALUES (NOW(), ?, ?, ?, ?, '', 'Used')");
+            $insertConsumptionQuery->bind_param("iiss", $detailsRow['SupplierID'], $detailsRow['SupplierName'], $detailsRow['MaterialType'], $materialName);
+            $insertConsumptionQuery->execute();
         }
 
         $conn->commit();
