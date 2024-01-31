@@ -247,3 +247,16 @@ CREATE TABLE Anbar_Akhal (
 );
 
 
+CREATE TABLE Consumption (
+    ConsumptionID INT AUTO_INCREMENT PRIMARY KEY,
+    Date DATETIME NOT NULL,
+    SupplierID INT,
+    SupplierName VARCHAR(255),
+    MaterialType VARCHAR(255),
+    MaterialName VARCHAR(255),
+    Description TEXT,
+    Status VARCHAR(50)
+);
+
+
+
