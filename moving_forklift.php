@@ -50,9 +50,34 @@ echo "</div>";
 // JavaScript for dynamic dropdowns and form processing
 echo "<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>";
 echo "<script>
-    // JavaScript to dynamically load 'Select Type' and 'Select Item' based on selected 'From' location
-    // Add AJAX code here
-</script>";
+$(document).ready(function() {
+    $('#from_location').change(function() {
+        var fromLocation = $(this).val();
+        $.ajax({
+            url: 'fetch_select_type.php',
+            type: 'POST',
+            data: {from_location: fromLocation},
+            success: function(response) {
+                $('#select_type').html(response);
+            }
+        });
+    });
+
+    $('#select_type').change(function() {
+        var fromLocation = $('#from_location').val();
+        var selectType = $(this).val();
+        $.ajax({
+            url: 'fetch_select_items.php',
+            type: 'POST',
+            data: {from_location: fromLocation, select_type: selectType},
+            success: function(response) {
+                $('#select_item').html("<select multiple name='selected_items[]'>" + response + "</select>");
+            }
+        });
+    });
+});
+</script>
+";
 
 echo "</body></html>";
 $conn->close();
