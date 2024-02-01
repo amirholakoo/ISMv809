@@ -47,9 +47,46 @@ echo "</div>";
 // JavaScript for dynamic dropdowns
 echo "<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>";
 echo "<script>
-    // JavaScript for dynamic dropdowns and AJAX calls
-    // Add AJAX code here
-</script>";
+$(document).ready(function() {
+    $('#from_anbar').change(function() {
+        var fromAnbar = $(this).val();
+        $.ajax({
+            url: 'fetch_select_type.php',
+            type: 'POST',
+            data: {from_anbar: fromAnbar},
+            success: function(response) {
+                $('#select_type').html(response);
+                $('#selected_items').html(''); // Clear items when from anbar changes
+            }
+        });
+        
+        // Update 'To' dropdown to exclude the selected 'From' Anbar
+        $('#to_anbar').html('');
+        <?php foreach ($anbars as $anbar): ?>
+            if ('<?php echo $anbar; ?>' !== fromAnbar) {
+                $('#to_anbar').append($('<option>', {
+                    value: '<?php echo $anbar; ?>',
+                    text: '<?php echo $anbar; ?>'
+                }));
+            }
+        <?php endforeach; ?>
+    });
+
+    $('#select_type').change(function() {
+        var selectType = $(this).val();
+        var fromAnbar = $('#from_anbar').val();
+        $.ajax({
+            url: 'fetch_select_items.php',
+            type: 'POST',
+            data: {from_anbar: fromAnbar, select_type: selectType},
+            success: function(response) {
+                $('#selected_items').html(response);
+            }
+        });
+    });
+});
+</script>
+";
 
 echo "</body></html>";
 $conn->close();
