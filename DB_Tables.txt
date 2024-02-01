@@ -35,7 +35,9 @@ CREATE TABLE Products (
     Comments TEXT,
     qrCode TEXT,
     Location VARCHAR(255),
-    Status ENUM('In-stock','Sold','Moved','Delivered')
+    Status ENUM('In-stock','Sold','Moved','Delivered'),
+    ReceiveDate DATETIME,
+    LastDate DATETIME
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE TABLE Customers (
     CustomerID INT AUTO_INCREMENT PRIMARY KEY,
