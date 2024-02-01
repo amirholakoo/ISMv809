@@ -1,21 +1,22 @@
+
+
 <?php
 // fetch_select_items.php
 include 'connect_db.php';
 
-if (isset($_POST['from_location']) && isset($_POST['select_type'])) {
-    $fromLocation = $_POST['from_location'];
-    $selectType = $_POST['select_type'];
+if (isset($_POST['from_anbar']) && isset($_POST['select_type'])) {
+    $fromAnbar = $_POST['from_anbar'];
+    list($type, $value) = explode('-', $_POST['select_type'], 2);
 
-    if ($fromLocation == 'Products') {
-        $query = "SELECT ReelNumber FROM Products WHERE Status = 'In-stock' AND Width = $selectType ORDER BY ReceivedDate";
+    if ($type == 'Width') {
+        $query = "SELECT ReelNumber FROM Products WHERE Status = 'In-stock' AND Width = $value ORDER BY ReceivedDate";
     } else {
-        $query = "SELECT ID FROM $fromLocation WHERE Status = 'In-stock' AND MaterialName = $selectType ORDER BY ReceivedDate";
+        $query = "SELECT MaterialName FROM $fromAnbar WHERE Status = 'In-stock' AND MaterialName = '$value' ORDER BY ReceivedDate";
     }
 
     $result = $conn->query($query);
     while ($row = $result->fetch_assoc()) {
-        $value = ($fromLocation == 'Products') ? $row['ReelNumber'] : $row['ID'];
-        echo "<option value='" . $value . "'>" . $value . "</option>";
+        echo "<option value='".$row['ReelNumber']."'>".$row['ReelNumber']."</option>";
     }
 }
 ?>
